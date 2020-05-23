@@ -1,7 +1,7 @@
 import * as pacote from 'pacote'
 import { logError } from '..'
 import {
-    npm,
+    npmCli,
     logInfo,
     logOk
 } from '..'
@@ -39,17 +39,31 @@ export async function exec (input?: any) {
     }
 
     process.chdir(args.to)
-    const output = await npm('i --only=prod --no-warnings --no-progress --silent')
+    await npmCli('i --only=prod --no-warnings --no-progress --silent')
     args.progress.succeed(`Successfully installed`)
 
-    return { path: args.to, output }
+    return { path: args.to }
 }
 
 export default async (input?: any) => {
     try {
-        const { output } = await exec(input)
-        output && logInfo(output)
+       await exec(input)
+        // output && logInfo(output)
     } catch (e) {
         logError(e)
     }
 }
+
+// export async function exec (input?: any) {
+//     const args = validate(input)
+   
+//     return await npmCli(args.command)
+// }
+
+// export default async (input?: any) => {
+//     try {
+//         await exec(input)
+//     } catch (e) {
+//         logError(e)
+//     }
+// }

@@ -4,6 +4,7 @@ import {
     logInfo,
     logOk
 } from '..'
+import ora from 'ora'
 
 function validate(input?: any) {
     const all: string[] = [].concat(process.argv as any).slice(3)
