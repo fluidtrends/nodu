@@ -39,14 +39,15 @@ export async function exec (input?: any) {
     }
 
     process.chdir(args.to)
-    const out = await npm('i --only=prod --no-warnings --no-progress --silent')
+    const output = await npm('i --only=prod --no-warnings --no-progress --silent')
     args.progress.succeed(`Successfully installed`)
-    return out
+
+    return { path: args.to, output }
 }
 
 export default async (input?: any) => {
     try {
-        const output = await exec(input)
+        const { output } = await exec(input)
         output && logInfo(output)
     } catch (e) {
         logError(e)
