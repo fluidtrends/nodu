@@ -7,7 +7,6 @@ import {
 } from '..'
 import path from 'path'
 import fs from 'fs'
-import ora from 'ora'
 
 async function validate(input?: any) {
     let id = input.module
@@ -16,17 +15,14 @@ async function validate(input?: any) {
         throw new Error(`The module is missing`)
     }
 
-    const progress = ora('Installing ...').start()
-
     try {
         const manifest = await pacote.manifest(id)
 
         let to = input.to || process.cwd()
         to = path.resolve(to, manifest.name, manifest.version)
         
-        return { id, progress, to, name: manifest.name, deps: manifest.dependencies }
+        return { id, to, name: manifest.name, deps: manifest.dependencies }
     } catch (e) {
-        progress.fail(e.message)
         throw new Error(`The module does not exist`)
     }
 }
@@ -40,30 +36,14 @@ export async function exec (input?: any) {
 
     process.chdir(args.to)
     await npmCli('i --only=prod --no-warnings --no-progress --silent')
-    args.progress.succeed(`Successfully installed`)
 
     return { path: args.to }
 }
 
 export default async (input?: any) => {
     try {
-       await exec(input)
-        // output && logInfo(output)
+       return await exec(input)
     } catch (e) {
         logError(e)
     }
 }
-
-// export async function exec (input?: any) {
-//     const args = validate(input)
-   
-//     return await npmCli(args.command)
-// }
-
-// export default async (input?: any) => {
-//     try {
-//         await exec(input)
-//     } catch (e) {
-//         logError(e)
-//     }
-// }
