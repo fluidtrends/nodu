@@ -1,0 +1,26 @@
+name: nodu
+footer:
+  suffix: "Nodu:"
+  text: "keep on building ;)"
+
+commands:
+- name: run
+  more: Run node script
+  description: run script
+  executor: lib/commands/run
+  options:
+  - name: script
+    description: The script to run
+    type: string
+    default: index.js
+  examples:
+  - command: run
+    description: run it
+
+- name: npm
+  more: Run npm command
+  description: npm
+  executor: lib/commands/npm
+  examples:
+  - command: npm
+    description: run it

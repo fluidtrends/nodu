@@ -11,22 +11,21 @@ import {
 
 savor.
 
-add('should not run npm if it is not resolve', (context: Context, done: Completion) => {
+add('should not run npm if it is not resolved', (context: Context, done: Completion) => {
+    process.env.NODU_NPM_LIB && delete process.env.NODU_NPM_LIB
+
     savor.promiseShouldFail(npm('config list -l'), done, (error) => {
         context.expect(error.message).to.exist
     })    
 }).
 
 add('should not resolve npm without node', (context: Context, done: Completion) => {
+    process.env.NODU_NODE_HOME && delete process.env.NODU_NODE_HOME
+    process.env.NODU_NPM_HOME && delete process.env.NODU_NPM_HOME
+
     resolveNpm()
 
-    context.expect(process.env.NODU_NODE_HOME).to.not.exist
-    context.expect(process.env.NODU_NODE_EXEC).to.not.exist
-    context.expect(process.env.NODU_NODE_BIN).to.not.exist
-    context.expect(process.env.NODU_NODE_GLOBAL_HOME).to.not.exist
-
     context.expect(process.env.NODU_NPM_HOME).to.not.exist
-    context.expect(process.env.NODU_NPM_EXEC).to.not.exist
 
     done()
 }).
