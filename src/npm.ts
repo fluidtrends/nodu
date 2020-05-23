@@ -36,8 +36,12 @@ export async function npm(cmd: string) : Promise<string> {
                     reject(er)
                     return
                 }
-                
+
                 try {
+                    if (!_npm.commands[_npm.command]) {
+                        throw new Error("Looks like an invalid npm command")
+                    }
+                                        
                     _npm.commands[_npm.command](_npm.argv, (err: TypeError) => {
                         if (err) {
                             io.release().err

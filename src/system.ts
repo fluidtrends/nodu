@@ -21,7 +21,7 @@ export function captureIO() {
     const release = () => {
         process.stdout.write = stdoutStream
         process.stderr.write = stderrStream
-        return { out, err }
+        return { out: out.trim(), err: err.trim() }
     }
 
     return {
