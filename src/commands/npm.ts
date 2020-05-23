@@ -1,6 +1,8 @@
 import { logError } from '..'
 import {
-    npm 
+    npm,
+    logInfo,
+    logOk
 } from '..'
 
 function validate(input?: any) {
@@ -12,13 +14,14 @@ function validate(input?: any) {
 
 export async function exec (input?: any) {
     const args = validate(input)
+   
     return await npm(args.command)
 }
 
 export default async (input?: any) => {
     try {
         const output = await exec(input)
-        console.log(output)
+        logInfo(output)
     } catch (e) {
         logError(e)
     }

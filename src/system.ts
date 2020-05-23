@@ -12,10 +12,10 @@ export function captureIO() {
         out = out + string
         return false        
     }
-
+    
     process.stderr.write = (string: string) => {
         err = err + string
-        return false        
+        return false      
     }
 
     const release = () => {

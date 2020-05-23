@@ -12,7 +12,7 @@ export async function npm(cmd: string) : Promise<string> {
             return
         }
 
-        let io = captureIO()
+        let io: any = captureIO()               
 
         const original = cmd.split(' ').map(s => s.trim())
         process.argv = process.argv.slice(0,2).concat(original)
@@ -30,30 +30,32 @@ export async function npm(cmd: string) : Promise<string> {
         
         conf._exit = false
 
-            _npm.load(conf, (er: TypeError) => {
-                if (er) {
-                    io.release()
-                    reject(er)
-                    return
+        _npm.load(conf, (er: TypeError) => {
+            if (er) {
+                io?.release()
+                reject(er)
+                return
+            }
+
+            try {
+                const _cmd = _npm.commands[_npm.command]
+
+                if (!_cmd) {
+                    throw new Error("Looks like an invalid npm command")
                 }
 
-                try {
-                    if (!_npm.commands[_npm.command]) {
-                        throw new Error("Looks like an invalid npm command")
+                _cmd(_npm.argv, (err: TypeError) => {
+                    if (err) {
+                        io?.release().err
+                        reject(err)
+                        return
                     }
-                                        
-                    _npm.commands[_npm.command](_npm.argv, (err: TypeError) => {
-                        if (err) {
-                            io.release().err
-                            reject(err)
-                            return
-                        }
-                        resolve(io.release().out)
-                    })
-                } catch (e) {
-                    io.release()
-                    reject(e)
-                }     
-            })   
+                    resolve(io?.release().out)
+                })
+            } catch (e) {
+                io?.release()
+                reject(e)
+            }     
+        })   
     })
 }
