@@ -15,9 +15,7 @@ function validate(input?: any) {
 export async function exec (input?: any) {
     const args = validate(input)
    
-    return await npm(args.command, (progress: string) => {
-        // console.log(progress)
-    })
+    return await npm(args.command)
 }
 
 export default async (input?: any) => {

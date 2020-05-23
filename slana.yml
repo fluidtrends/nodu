@@ -4,6 +4,21 @@ footer:
   text: "keep on building ;)"
 
 commands:
+- name: install
+  more: Install a module
+  description: install it
+  executor: lib/commands/install
+  options:
+  - name: to
+    description: The destination location
+    type: string
+  - name: module
+    description: The module to install
+    type: string
+  examples:
+  - command: install <module>
+    description: install it
+
 - name: run
   more: Run node script
   description: run script

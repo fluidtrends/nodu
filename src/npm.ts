@@ -4,7 +4,7 @@ import {
     captureIO
 } from '.'
 
-export async function npm(cmd: string, progress?: (m: string) => void) : Promise<string> {
+export async function npm(cmd: string) : Promise<string> {
     return new Promise((resolve, reject) => {
 
         if (!process.env.NODU_NPM_LIB) {
@@ -12,15 +12,7 @@ export async function npm(cmd: string, progress?: (m: string) => void) : Promise
             return
         }
 
-         let hasProgress = false
-         let io: any = captureIO()   
-              
-         process.on('time', (m: string) => {
-             hasProgress = true
-             io && io.release()
-             io = undefined
-             progress && progress(m)
-        })
+        let io: any = captureIO()               
 
         const original = cmd.split(' ').map(s => s.trim())
         process.argv = process.argv.slice(0,2).concat(original)
@@ -58,7 +50,7 @@ export async function npm(cmd: string, progress?: (m: string) => void) : Promise
                         reject(err)
                         return
                     }
-                    resolve(hasProgress ? '' : io?.release().out)
+                    resolve(io?.release().out)
                 })
             } catch (e) {
                 io?.release()
