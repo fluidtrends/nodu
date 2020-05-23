@@ -21,7 +21,7 @@ async function validate(input?: any) {
         let to = input.to || process.cwd()
         to = path.resolve(to, manifest.name, manifest.version)
         
-        return { id, to, name: manifest.name, deps: manifest.dependencies }
+        return { id, to, version: manifest.version, name: manifest.name, deps: manifest.dependencies }
     } catch (e) {
         throw new Error(`The module does not exist`)
     }
@@ -37,7 +37,7 @@ export async function exec (input?: any) {
     process.chdir(args.to)
     await npmCli('i --only=prod --no-warnings --no-progress --silent')
 
-    return { path: args.to }
+    return args
 }
 
 export default async (input?: any) => {
