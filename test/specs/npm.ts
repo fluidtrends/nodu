@@ -14,7 +14,7 @@ savor.
 add('should not run npm if it is not resolved', (context: Context, done: Completion) => {
     process.env.NODU_NPM_LIB && delete process.env.NODU_NPM_LIB
 
-    savor.promiseShouldFail(npm('config list -l'), done, (error) => {
+    savor.promiseShouldFail(npm('root'), done, (error) => {
         context.expect(error.message).to.exist
     })    
 }).

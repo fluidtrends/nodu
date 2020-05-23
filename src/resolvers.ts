@@ -26,7 +26,9 @@ export function resolveNpm() {
 
     const npmLib = path.dirname(npmScript)
     const npmRoot = path.dirname(npmLib)
+    const npmBin = path.resolve(path.dirname(__dirname), 'bin', 'npm.js')
 
+    process.env.NODU_NPM_BIN = npmBin
     process.env.NODU_NPM_HOME = npmRoot
     process.env.NODU_NPM_LIB = npmLib
 }
