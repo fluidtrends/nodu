@@ -1,5 +1,10 @@
 import { spawn } from 'child_process'
+
 import ora from 'ora'
+
+import { 
+    logInfo
+ } from "."
 
 export function captureIO() {
     let stdoutStream = process.stdout.write 
@@ -30,12 +35,12 @@ export function captureIO() {
 }
 
 export async function exec(cmd: string, args: string[], log?: any): Promise<string> {
-    const spinner = log ? ora(log.start).start() : undefined
-
     return new Promise((resolve, reject) => {
+        const spinner = log ? ora(log.start).start() : undefined
+
         let stdout = ''
         let stderr = ''
-
+                
         const s = spawn(cmd, args)
 
         s.on('error', (error) => {
@@ -44,21 +49,21 @@ export async function exec(cmd: string, args: string[], log?: any): Promise<stri
         });
 
         s.stdout.on('data', (data) => {
-            stdout = `${stdout}${data}`
+            stdout = `${stdout}${data}`.trim()
         });
         
         s.stderr.on('data', (data) => {
-            stderr = `${stderr}${data}`
+            stderr = `${stderr}${data}`.trim()
         });
         
         s.on('close', (code) => {
             if (code === 0) {
-                spinner && spinner.succeed(log.done)
-                resolve(stdout.trim())
+                spinner && spinner.stop()
+                resolve(stdout)                                
                 return
             }
             spinner && spinner.fail(stderr.trim())
-            reject(new TypeError(stderr.trim()))
-        })  
+            reject(new TypeError(stderr))
+        })
     })
 }
