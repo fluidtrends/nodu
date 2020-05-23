@@ -4,7 +4,7 @@ import {
     captureIO
 } from '.'
 
-export async function npm(cmd: string) : Promise<string> {
+export async function npm(cmd: string, progress?: (m: string) => void) : Promise<string> {
     return new Promise((resolve, reject) => {
 
         if (!process.env.NODU_NPM_LIB) {
@@ -12,7 +12,15 @@ export async function npm(cmd: string) : Promise<string> {
             return
         }
 
-        let io = captureIO()
+         let hasProgress = false
+         let io: any = captureIO()   
+              
+         process.on('time', (m: string) => {
+             hasProgress = true
+             io && io.release()
+             io = undefined
+             progress && progress(m)
+        })
 
         const original = cmd.split(' ').map(s => s.trim())
         process.argv = process.argv.slice(0,2).concat(original)
@@ -30,30 +38,32 @@ export async function npm(cmd: string) : Promise<string> {
         
         conf._exit = false
 
-            _npm.load(conf, (er: TypeError) => {
-                if (er) {
-                    io.release()
-                    reject(er)
-                    return
+        _npm.load(conf, (er: TypeError) => {
+            if (er) {
+                io?.release()
+                reject(er)
+                return
+            }
+
+            try {
+                const _cmd = _npm.commands[_npm.command]
+
+                if (!_cmd) {
+                    throw new Error("Looks like an invalid npm command")
                 }
 
-                try {
-                    if (!_npm.commands[_npm.command]) {
-                        throw new Error("Looks like an invalid npm command")
+                _cmd(_npm.argv, (err: TypeError) => {
+                    if (err) {
+                        io?.release().err
+                        reject(err)
+                        return
                     }
-                                        
-                    _npm.commands[_npm.command](_npm.argv, (err: TypeError) => {
-                        if (err) {
-                            io.release().err
-                            reject(err)
-                            return
-                        }
-                        resolve(io.release().out)
-                    })
-                } catch (e) {
-                    io.release()
-                    reject(e)
-                }     
-            })   
+                    resolve(hasProgress ? '' : io?.release().out)
+                })
+            } catch (e) {
+                io?.release()
+                reject(e)
+            }     
+        })   
     })
 }
