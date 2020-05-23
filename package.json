@@ -1,6 +1,6 @@
 {
   "name": "nodu",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A programmable Node.js wrapper",
   "scripts": {
     "build": "savor build",
@@ -20,12 +20,16 @@
   "types": "lib/index.d.ts",
   "files": [
     "bin/**/*",
-    "lib/**/*"
+    "lib/**/*",
+    "src/**/*",
+    "slana.yml"
   ],
   "pkg": {
     "assets": [
       "lib/**/*",
-      "bin/**/*"
+      "src/**/*",
+      "bin/**/*",
+      "slana.yml"
     ]
   },
   "repository": {
