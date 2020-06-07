@@ -1,6 +1,6 @@
 {
   "name": "nodu",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "description": "Untwist your Node.js environment.",
   "scripts": {
     "build": "savor build",
