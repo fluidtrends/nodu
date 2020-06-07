@@ -34,8 +34,12 @@ export async function exec (input?: any) {
         await pacote.extract(args.id, args.to)
     }
 
+    const cwd = process.cwd()
     process.chdir(args.to)
+
     await npmCli('i --only=prod --no-warnings --no-progress --silent')
+
+    process.chdir(cwd)
 
     return args
 }
