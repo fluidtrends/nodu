@@ -19,7 +19,7 @@ async function validate(input?: any) {
         const manifest = await pacote.manifest(id)
 
         let to = input.to || process.cwd()
-        to = path.resolve(to, manifest.name, manifest.version)
+        to = path.resolve(to, manifest.name, manifest.version, manifest.name)
         
         return { id, to, version: manifest.version, name: manifest.name, deps: manifest.dependencies }
     } catch (e) {
