@@ -69,7 +69,7 @@ export async function runNpm(args?: string) : Promise<string> {
     })
 }
 
-export async function npmCli (args: string = '') {
+export async function npmCli (args: string = '', msg: [string, string] = ['Please hold on a minute ...', 'Done']) {
     resolveAll()
 
     const LONG_PROC_CMDS = ['i', 'install']
@@ -77,8 +77,8 @@ export async function npmCli (args: string = '') {
     const cmd: string[] = args ? args.split(' ') : process.argv.splice(2)
 
     const out = await exec(process.env.NODU_NPM_BIN!, cmd, {
-        start: "Hold on ...",
-        done: "Done"
+        start: msg[0],
+        done: msg[1]
     })
     
     LONG_PROC_CMDS.includes(cmd[0]) || console.log(out)
